@@ -1,0 +1,57 @@
+# ==============================================================================
+# UCAB Tasks - Docker Compose
+# Orchestrates NestJS application with MongoDB
+#
+# Usage:
+#   docker-compose up -d        # Start all services
+#   docker-compose down         # Stop all services
+#   docker-compose logs -f app  # View app logs
+# ==============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # NestJS Application
+  # ---------------------------------------------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ucab-tasks-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - MONGO_URI=mongodb://mongo:27017/ucab-tasks
+    volumes:
+      # Mount source code for hot-reload
+      - .:/app
+      # Prevent overwriting node_modules
+      - /app/node_modules
+    depends_on:
+      - mongo
+    networks:
+      - ucab-network
+
+  # ---------------------------------------------------------------------------
+  # MongoDB Database
+  # ---------------------------------------------------------------------------
+  mongo:
+    image: mongo:latest
+    container_name: ucab-tasks-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      # Persistent data storage
+      - ./mongo-data:/data/db
+    networks:
+      - ucab-network
+
+# =============================================================================
+# Networks
+# =============================================================================
+networks:
+  ucab-network:
+    driver: bridge
