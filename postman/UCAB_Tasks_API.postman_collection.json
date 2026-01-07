@@ -1,0 +1,762 @@
+{
+    "info": {
+        "name": "UCAB Tasks API",
+        "description": "Colección de Postman para probar la API REST de UCAB Tasks.\n\nAPI para gestión de notas desarrollada con NestJS siguiendo Clean Architecture.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:3000",
+            "type": "string"
+        },
+        {
+            "key": "noteId",
+            "value": "",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Notes",
+            "description": "Endpoints para gestión de notas",
+            "item": [
+                {
+                    "name": "Create Note",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status code is 201', function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "});",
+                                    "",
+                                    "pm.test('Response has correct structure', function () {",
+                                    "    const jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('id');",
+                                    "    pm.expect(jsonData).to.have.property('title');",
+                                    "    pm.expect(jsonData).to.have.property('content');",
+                                    "    pm.expect(jsonData).to.have.property('createdAt');",
+                                    "    pm.expect(jsonData).to.have.property('updatedAt');",
+                                    "    ",
+                                    "    // Save noteId for subsequent tests",
+                                    "    pm.collectionVariables.set('noteId', jsonData.id);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"Mi primera nota\",\n    \"content\": \"Este es el contenido de mi nota de prueba.\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/notes",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notes"
+                            ]
+                        },
+                        "description": "Crea una nueva nota con título y contenido."
+                    }
+                },
+                {
+                    "name": "Get All Notes",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status code is 200', function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test('Response is an array', function () {",
+                                    "    const jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "});",
+                                    "",
+                                    "pm.test('Notes do not include content', function () {",
+                                    "    const jsonData = pm.response.json();",
+                                    "    if (jsonData.length > 0) {",
+                                    "        pm.expect(jsonData[0]).to.not.have.property('content');",
+                                    "    }",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/notes",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notes"
+                            ]
+                        },
+                        "description": "Obtiene la lista de todas las notas (sin contenido)."
+                    }
+                },
+                {
+                    "name": "Get All Notes (Sorted by Title ASC)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status code is 200', function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test('Notes are sorted alphabetically', function () {",
+                                    "    const jsonData = pm.response.json();",
+                                    "    if (jsonData.length > 1) {",
+                                    "        pm.expect(jsonData[0].title.localeCompare(jsonData[1].title)).to.be.at.most(0);",
+                                    "    }",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/notes?sortBy=title&order=asc",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notes"
+                            ],
+                            "query": [
+                                {
+                                    "key": "sortBy",
+                                    "value": "title"
+                                },
+                                {
+                                    "key": "order",
+                                    "value": "asc"
+                                }
+                            ]
+                        },
+                        "description": "Obtiene notas ordenadas por título ascendente."
+                    }
+                },
+                {
+                    "name": "Get All Notes (Sorted by CreatedAt DESC)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/notes?sortBy=createdAt&order=desc",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notes"
+                            ],
+                            "query": [
+                                {
+                                    "key": "sortBy",
+                                    "value": "createdAt"
+                                },
+                                {
+                                    "key": "order",
+                                    "value": "desc"
+                                }
+                            ]
+                        },
+                        "description": "Obtiene notas ordenadas por fecha de creación (más reciente primero)."
+                    }
+                },
+                {
+                    "name": "Get All Notes (Sorted by UpdatedAt)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/notes?sortBy=updatedAt&order=desc",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notes"
+                            ],
+                            "query": [
+                                {
+                                    "key": "sortBy",
+                                    "value": "updatedAt"
+                                },
+                                {
+                                    "key": "order",
+                                    "value": "desc"
+                                }
+                            ]
+                        },
+                        "description": "Obtiene notas ordenadas por fecha de modificación."
+                    }
+                },
+                {
+                    "name": "Get Note by ID",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status code is 200', function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test('Response includes content', function () {",
+                                    "    const jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('content');",
+                                    "    pm.expect(jsonData).to.have.property('title');",
+                                    "    pm.expect(jsonData).to.have.property('id');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/notes/{{noteId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notes",
+                                "{{noteId}}"
+                            ]
+                        },
+                        "description": "Obtiene una nota específica por su ID (incluye contenido)."
+                    }
+                },
+                {
+                    "name": "Update Note (Title Only)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status code is 200', function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test('Title was updated', function () {",
+                                    "    const jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.title).to.equal('Título Actualizado');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"Título Actualizado\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/notes/{{noteId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notes",
+                                "{{noteId}}"
+                            ]
+                        },
+                        "description": "Actualiza solo el título de una nota."
+                    }
+                },
+                {
+                    "name": "Update Note (Content Only)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status code is 200', function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test('Content was updated', function () {",
+                                    "    const jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.content).to.equal('Contenido actualizado mediante Postman.');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"content\": \"Contenido actualizado mediante Postman.\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/notes/{{noteId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notes",
+                                "{{noteId}}"
+                            ]
+                        },
+                        "description": "Actualiza solo el contenido de una nota."
+                    }
+                },
+                {
+                    "name": "Update Note (Title and Content)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status code is 200', function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test('Both fields were updated', function () {",
+                                    "    const jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.title).to.equal('Nota Completamente Editada');",
+                                    "    pm.expect(jsonData.content).to.equal('Ambos campos fueron actualizados.');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"Nota Completamente Editada\",\n    \"content\": \"Ambos campos fueron actualizados.\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/notes/{{noteId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notes",
+                                "{{noteId}}"
+                            ]
+                        },
+                        "description": "Actualiza título y contenido de una nota."
+                    }
+                },
+                {
+                    "name": "Create Second Note (for delete test)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status code is 201', function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "});",
+                                    "",
+                                    "const jsonData = pm.response.json();",
+                                    "pm.collectionVariables.set('noteId2', jsonData.id);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"Segunda nota para eliminar\",\n    \"content\": \"Esta nota será eliminada junto con la primera.\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/notes",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notes"
+                            ]
+                        },
+                        "description": "Crea una segunda nota para probar eliminación múltiple."
+                    }
+                },
+                {
+                    "name": "Delete Single Note",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status code is 200', function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test('Returns deleted count', function () {",
+                                    "    const jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('deletedCount');",
+                                    "    pm.expect(jsonData.deletedCount).to.equal(1);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"ids\": [\"{{noteId}}\"]\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/notes",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notes"
+                            ]
+                        },
+                        "description": "Elimina una nota por su ID."
+                    }
+                },
+                {
+                    "name": "Delete Multiple Notes",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    "// Create two notes to delete",
+                                    "const baseUrl = pm.collectionVariables.get('baseUrl');",
+                                    "",
+                                    "// We'll use existing noteId2 and create one more inline in body"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status code is 200', function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test('Returns deleted count', function () {",
+                                    "    const jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('deletedCount');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"ids\": [\"{{noteId2}}\"]\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/notes",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notes"
+                            ]
+                        },
+                        "description": "Elimina múltiples notas a la vez."
+                    }
+                },
+                {
+                    "name": "Verify Deletion (Should 404)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status code is 404 (note was deleted)', function () {",
+                                    "    pm.response.to.have.status(404);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/notes/{{noteId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notes",
+                                "{{noteId}}"
+                            ]
+                        },
+                        "description": "Verifica que la nota fue eliminada (debe retornar 404)."
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Validation Tests",
+            "description": "Pruebas de validación de datos",
+            "item": [
+                {
+                    "name": "Create Note - Missing Title (400)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status code is 400', function () {",
+                                    "    pm.response.to.have.status(400);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"content\": \"Contenido sin título\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/notes",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notes"
+                            ]
+                        },
+                        "description": "Intenta crear nota sin título (debe fallar)."
+                    }
+                },
+                {
+                    "name": "Create Note - Missing Content (400)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status code is 400', function () {",
+                                    "    pm.response.to.have.status(400);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"Título sin contenido\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/notes",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notes"
+                            ]
+                        },
+                        "description": "Intenta crear nota sin contenido (debe fallar)."
+                    }
+                },
+                {
+                    "name": "Create Note - Empty Body (400)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status code is 400', function () {",
+                                    "    pm.response.to.have.status(400);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/notes",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notes"
+                            ]
+                        },
+                        "description": "Intenta crear nota con body vacío (debe fallar)."
+                    }
+                },
+                {
+                    "name": "Get Non-Existent Note (404)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status code is 404', function () {",
+                                    "    pm.response.to.have.status(404);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/notes/507f1f77bcf86cd799439999",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notes",
+                                "507f1f77bcf86cd799439999"
+                            ]
+                        },
+                        "description": "Intenta obtener nota que no existe (debe retornar 404)."
+                    }
+                },
+                {
+                    "name": "Delete - Empty IDs Array (400)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Status code is 400', function () {",
+                                    "    pm.response.to.have.status(400);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"ids\": []\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/notes",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "notes"
+                            ]
+                        },
+                        "description": "Intenta eliminar con array vacío (debe fallar)."
+                    }
+                }
+            ]
+        }
+    ]
+}
