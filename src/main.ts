@@ -9,6 +9,11 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Set global prefix for API routes
+  app.setGlobalPrefix('api', {
+    exclude: ['/'], // Exclude root to serve static files
+  });
+
   // Enable global validation pipe with transformation
   app.useGlobalPipes(
     new ValidationPipe({
@@ -32,13 +37,13 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api/docs', app, document);
 
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
 
-  console.log(`🚀 UCAB Tasks API running on: http://localhost:${port}`);
-  console.log(`📚 Swagger documentation: http://localhost:${port}/api`);
+  console.log(`🚀 UCAB Tasks running on: http://localhost:${port}`);
+  console.log(`📚 Swagger documentation: http://localhost:${port}/api/docs`);
 }
 
 bootstrap();

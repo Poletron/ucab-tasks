@@ -33,8 +33,26 @@ docker-compose logs -f app
 ```
 
 La API estará disponible en:
-- **API**: http://localhost:3000
-- **Swagger UI**: http://localhost:3000/api
+- **Frontend**: http://localhost:3000
+- **API**: http://localhost:3000/api/notes
+- **Swagger UI**: http://localhost:3000/api/docs
+
+## 🎨 Frontend
+
+La aplicación incluye una interfaz web moderna inspirada en Notion/Apple Notes:
+
+- **Diseño elegante** con tipografía Inter y paleta de colores cálida
+- **Sidebar** con lista de notas y ordenamiento
+- **Editor** con auto-guardado y atajos de teclado
+- **Responsive** para móviles y escritorio
+
+### Atajos de teclado
+
+| Atajo | Acción |
+|-------|--------|
+| `Ctrl+S` | Guardar nota |
+| `Ctrl+N` | Nueva nota |
+| `Esc` | Cerrar modal |
 
 ## 🛠️ Desarrollo Local (Sin Docker)
 

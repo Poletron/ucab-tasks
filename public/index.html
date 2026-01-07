@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UCAB Tasks</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <span class="logo-icon">📝</span>
+          <h1>UCAB Tasks</h1>
+        </div>
+      </div>
+      
+      <div class="sidebar-actions">
+        <button class="btn-new-note" id="btnNewNote">
+          <span class="icon">+</span>
+          Nueva Nota
+        </button>
+      </div>
+
+      <div class="sidebar-sort">
+        <label for="sortSelect">Ordenar por:</label>
+        <select id="sortSelect">
+          <option value="updatedAt-desc">Última modificación</option>
+          <option value="createdAt-desc">Más recientes</option>
+          <option value="createdAt-asc">Más antiguas</option>
+          <option value="title-asc">Título A-Z</option>
+          <option value="title-desc">Título Z-A</option>
+        </select>
+      </div>
+
+      <nav class="notes-list" id="notesList">
+        <!-- Notes will be rendered here -->
+      </nav>
+
+      <div class="sidebar-footer">
+        <span class="note-count" id="noteCount">0 notas</span>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">📋</div>
+        <h2>Sin notas seleccionadas</h2>
+        <p>Selecciona una nota del panel izquierdo o crea una nueva</p>
+        <button class="btn-primary" id="btnNewNoteEmpty">
+          <span class="icon">+</span>
+          Crear primera nota
+        </button>
+      </div>
+
+      <!-- Note Editor -->
+      <div class="note-editor hidden" id="noteEditor">
+        <div class="editor-header">
+          <input 
+            type="text" 
+            class="note-title-input" 
+            id="noteTitle" 
+            placeholder="Título de la nota..."
+            maxlength="200"
+          >
+          <div class="editor-actions">
+            <button class="btn-icon btn-save" id="btnSave" title="Guardar (Ctrl+S)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+            </button>
+            <button class="btn-icon btn-delete" id="btnDelete" title="Eliminar">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="editor-meta" id="editorMeta">
+          <span class="meta-item" id="metaCreated"></span>
+          <span class="meta-separator">•</span>
+          <span class="meta-item" id="metaUpdated"></span>
+        </div>
+        <textarea 
+          class="note-content-input" 
+          id="noteContent" 
+          placeholder="Escribe el contenido de tu nota aquí..."
+        ></textarea>
+        <div class="editor-status" id="editorStatus"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay hidden" id="deleteModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>¿Eliminar nota?</h3>
+      </div>
+      <div class="modal-body">
+        <p>Esta acción no se puede deshacer.</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="btnCancelDelete">Cancelar</button>
+        <button class="btn-danger" id="btnConfirmDelete">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { NotesModule } from './use-cases/notes/notes.module';
 
 /**
@@ -9,6 +11,7 @@ import { NotesModule } from './use-cases/notes/notes.module';
  * Configures the application with:
  * - Environment variables via ConfigModule
  * - MongoDB connection via MongooseModule
+ * - Static file serving via ServeStaticModule
  * - Feature modules (NotesModule)
  */
 @Module({
@@ -17,6 +20,11 @@ import { NotesModule } from './use-cases/notes/notes.module';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+    }),
+    // Serve static files from public folder
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      exclude: ['/api/(.*)'],
     }),
     // MongoDB connection
     MongooseModule.forRootAsync({
