@@ -17,6 +17,7 @@ const state = {
     notes: [],
     currentNoteId: null,
     isEditing: false,
+    isNewNote: false,
     hasUnsavedChanges: false,
 };
 
@@ -321,22 +322,33 @@ function setEditorStatus(message, type = '') {
 
 /**
  * Handles creating a new note
+ * Shows empty editor - note is created on first save
  */
 async function handleNewNote() {
-    const note = await createNote({
-        title: 'Nueva nota',
-        content: '',
-    });
-
-    if (note) {
-        await loadNotes();
-        const fullNote = await fetchNoteById(note.id);
-        if (fullNote) {
-            showEditor(fullNote);
-            elements.noteTitle.select();
-        }
-        showToast('Nota creada', 'success');
+    if (state.hasUnsavedChanges && state.currentNoteId) {
+        await handleSave();
     }
+
+    // Set state for new note (not yet saved)
+    state.currentNoteId = null;
+    state.isNewNote = true;
+    state.hasUnsavedChanges = false;
+
+    // Clear and show editor
+    elements.noteTitle.value = '';
+    elements.noteContent.value = '';
+    elements.metaCreated.textContent = '';
+    elements.metaUpdated.textContent = '';
+    elements.editorMeta.style.display = 'none';
+    elements.editorStatus.textContent = '';
+    elements.editorStatus.className = 'editor-status';
+
+    elements.emptyState.classList.add('hidden');
+    elements.noteEditor.classList.remove('hidden');
+
+    // Focus on title
+    elements.noteTitle.focus();
+    renderNotesList();
 }
 
 /**
@@ -350,6 +362,8 @@ async function handleSelectNote(noteId) {
 
     const note = await fetchNoteById(noteId);
     if (note) {
+        state.isNewNote = false;
+        elements.editorMeta.style.display = 'flex';
         showEditor(note);
     }
 }
@@ -358,13 +372,44 @@ async function handleSelectNote(noteId) {
  * Handles saving the current note
  */
 async function handleSave() {
-    if (!state.currentNoteId) return;
+    const title = elements.noteTitle.value.trim() || 'Sin título';
+    const content = elements.noteContent.value.trim();
+
+    // Don't save if both are empty for new notes
+    if (state.isNewNote && !title && !content) {
+        return;
+    }
 
     setEditorStatus('Guardando...', 'saving');
 
+    // If it's a new note, create it first
+    if (state.isNewNote || !state.currentNoteId) {
+        const created = await createNote({
+            title: title,
+            content: content || ' ', // Ensure content is not empty
+        });
+
+        if (created) {
+            state.currentNoteId = created.id;
+            state.isNewNote = false;
+            state.hasUnsavedChanges = false;
+            elements.editorMeta.style.display = 'flex';
+            elements.metaCreated.textContent = `Creada: ${formatFullDate(created.createdAt)}`;
+            elements.metaUpdated.textContent = `Modificada: ${formatFullDate(created.updatedAt)}`;
+            setEditorStatus('Guardado', 'saved');
+            await loadNotes();
+            showToast('Nota creada', 'success');
+            setTimeout(() => setEditorStatus(''), 2000);
+        } else {
+            setEditorStatus('Error al guardar', 'error');
+        }
+        return;
+    }
+
+    // Update existing note
     const updated = await updateNote(state.currentNoteId, {
-        title: elements.noteTitle.value || 'Sin título',
-        content: elements.noteContent.value,
+        title: title,
+        content: content,
     });
 
     if (updated) {
@@ -372,7 +417,6 @@ async function handleSave() {
         setEditorStatus('Guardado', 'saved');
         elements.metaUpdated.textContent = `Modificada: ${formatFullDate(updated.updatedAt)}`;
         await loadNotes();
-
         setTimeout(() => setEditorStatus(''), 2000);
     } else {
         setEditorStatus('Error al guardar', 'error');
