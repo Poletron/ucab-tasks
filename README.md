@@ -149,15 +149,15 @@ Este proyecto implementa **Clean Architecture** con el **Patrón Repositorio**:
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│                      Controllers (HTTP)                       │
-│                           ↓                                   │
-│                      Services (Lógica)                        │
-│                           ↓                                   │
-│               INotesRepository (Abstracción)                  │
-│                           ↓                                   │
-│            MongoNotesRepository (Implementación)              │
-│                           ↓                                   │
-│                      MongoDB                                  │
+│                      Controllers (HTTP)                      │
+│                             ↓                                │
+│                      Services (Lógica)                       │
+│                             ↓                                │
+│               INotesRepository (Abstracción)                 │
+│                             ↓                                │
+│            MongoNotesRepository (Implementación)             │
+│                             ↓                                │
+│                          MongoDB                             │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -205,8 +205,65 @@ docker-compose build --no-cache
 La documentación interactiva de la API está disponible en Swagger UI:
 
 ```
-http://localhost:3000/api
+http://localhost:3000/api/docs
 ```
+
+## 🎓 Guía de Defensa
+
+Sigue estos pasos para demostrar el proyecto:
+
+### 1. Levantar el Entorno
+
+```bash
+cd ucab-tasks
+docker-compose up -d
+docker-compose logs -f app  # Esperar: "UCAB Tasks running on..."
+```
+
+### 2. Demo de la UI
+
+1. Abrir http://localhost:3000
+2. Crear una nota (click "Nueva Nota" → escribir → Ctrl+S)
+3. Editar la nota (cambiar título/contenido → auto-guarda)
+4. Mostrar ordenamiento (dropdown en sidebar)
+5. Eliminar nota (icono basura → confirmar)
+
+### 3. Swagger UI
+
+1. Abrir http://localhost:3000/api/docs
+2. Probar `POST /api/notes` - crear nota
+3. Probar `GET /api/notes` - listar (sin contenido)
+4. Probar `GET /api/notes/{id}` - detalle (con contenido)
+5. Probar filtros: `?sortBy=title&order=asc`
+
+### 4. Ejecucion de Tests
+
+```bash
+# DENTRO del contenedor (recomendado para demo)
+docker-compose exec app npm run test
+docker-compose exec app npm run test:e2e
+
+# O localmente si tienes Node.js
+npm run test        # 12 unit tests
+npm run test:e2e    # 18 e2e tests
+```
+
+### 5. Explicacion de la Arquitectura
+
+Mostrar archivos clave:
+
+| Archivo | Explicar |
+|---------|----------|
+| `src/core/interfaces/notes-repository.interface.ts` | Contrato abstracto |
+| `src/infrastructure/repositories/mongo-notes.repository.ts` | Implementación MongoDB |
+| `src/use-cases/notes/notes.service.ts` | Lógica de negocio (inyecta interfaz) |
+| `src/use-cases/notes/notes.module.ts` | DI: `{ provide: INotesRepository, useClass: MongoNotesRepository }` |
+
+**Punto clave**: El servicio NO conoce MongoDB, solo la abstracción.
+
+### 6. Postman (Opcional)
+
+Importar: `postman/UCAB_Tasks_API.postman_collection.json`
 
 ## 🧪 Testing
 
