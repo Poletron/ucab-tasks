@@ -17,6 +17,7 @@ import {
     ApiTags,
 } from '@nestjs/swagger';
 import { NotesService } from './notes.service';
+import { NotesMapper } from './notes.mapper';
 import {
     CreateNoteDto,
     UpdateNoteDto,
@@ -32,7 +33,7 @@ import {
  * 
  * Handles HTTP requests for note operations.
  * This controller is "thin" - it only parses requests, validates DTOs,
- * calls the service, and returns responses.
+ * calls the service, and uses the mapper to transform responses.
  */
 @ApiTags('Notes')
 @Controller('notes')
@@ -46,7 +47,8 @@ export class NotesController {
     @Get()
     @ApiOperation({
         summary: 'Get all notes',
-        description: 'Retrieves a list of all notes with optional sorting. Returns notes without content.',
+        description:
+            'Retrieves a list of all notes with optional sorting. Returns notes without content.',
     })
     @ApiResponse({
         status: 200,
@@ -58,13 +60,7 @@ export class NotesController {
             sortBy: filters.sortBy,
             order: filters.order,
         });
-        // Map to list items (without content)
-        return notes.map((note) => ({
-            id: note.id,
-            title: note.title,
-            createdAt: note.createdAt,
-            updatedAt: note.updatedAt,
-        }));
+        return NotesMapper.toListItems(notes);
     }
 
     /**
@@ -74,7 +70,8 @@ export class NotesController {
     @Get(':id')
     @ApiOperation({
         summary: 'Get note by ID',
-        description: 'Retrieves a single note by its unique identifier. Returns full details including content.',
+        description:
+            'Retrieves a single note by its unique identifier. Returns full details including content.',
     })
     @ApiParam({
         name: 'id',
@@ -92,13 +89,7 @@ export class NotesController {
     })
     async findById(@Param('id') id: string): Promise<NoteDetailDto> {
         const note = await this.notesService.findById(id);
-        return {
-            id: note.id,
-            title: note.title,
-            content: note.content,
-            createdAt: note.createdAt,
-            updatedAt: note.updatedAt,
-        };
+        return NotesMapper.toDetail(note);
     }
 
     /**
@@ -120,13 +111,7 @@ export class NotesController {
     })
     async create(@Body() createNoteDto: CreateNoteDto): Promise<NoteDetailDto> {
         const note = await this.notesService.create(createNoteDto);
-        return {
-            id: note.id,
-            title: note.title,
-            content: note.content,
-            createdAt: note.createdAt,
-            updatedAt: note.updatedAt,
-        };
+        return NotesMapper.toDetail(note);
     }
 
     /**
@@ -135,7 +120,8 @@ export class NotesController {
     @Patch(':id')
     @ApiOperation({
         summary: 'Update a note',
-        description: 'Updates an existing note. Only title and content can be modified.',
+        description:
+            'Updates an existing note. Only title and content can be modified.',
     })
     @ApiParam({
         name: 'id',
@@ -156,13 +142,7 @@ export class NotesController {
         @Body() updateNoteDto: UpdateNoteDto,
     ): Promise<NoteDetailDto> {
         const note = await this.notesService.update(id, updateNoteDto);
-        return {
-            id: note.id,
-            title: note.title,
-            content: note.content,
-            createdAt: note.createdAt,
-            updatedAt: note.updatedAt,
-        };
+        return NotesMapper.toDetail(note);
     }
 
     /**
@@ -179,7 +159,9 @@ export class NotesController {
         description: 'Notes deleted successfully',
         type: DeleteResultDto,
     })
-    async delete(@Body() deleteNotesDto: DeleteNotesDto): Promise<DeleteResultDto> {
+    async delete(
+        @Body() deleteNotesDto: DeleteNotesDto,
+    ): Promise<DeleteResultDto> {
         const deletedCount = await this.notesService.delete(deleteNotesDto.ids);
         return { deletedCount };
     }
