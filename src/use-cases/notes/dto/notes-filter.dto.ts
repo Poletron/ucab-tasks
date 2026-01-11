@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsOptional } from 'class-validator';
 
 /**
- * Available fields for sorting notes
+ * Campos disponibles para ordenar notas
  */
 export enum SortByField {
     TITLE = 'title',
@@ -11,7 +11,7 @@ export enum SortByField {
 }
 
 /**
- * Sort order direction
+ * Dirección del ordenamiento
  */
 export enum SortOrder {
     ASC = 'asc',
@@ -19,15 +19,15 @@ export enum SortOrder {
 }
 
 /**
- * DTO for filtering and sorting notes list
+ * DTO para filtrar y ordenar la lista de notas
  */
 export class NotesFilterDto {
     /**
-     * Field to sort by
+     * Campo por el cual ordenar las notas
      * @example "createdAt"
      */
     @ApiPropertyOptional({
-        description: 'Field to sort notes by',
+        description: 'Campo por el cual ordenar las notas',
         enum: SortByField,
         example: SortByField.CREATED_AT,
     })
@@ -36,11 +36,11 @@ export class NotesFilterDto {
     sortBy?: SortByField;
 
     /**
-     * Sort order direction
+     * Dirección del ordenamiento
      * @example "desc"
      */
     @ApiPropertyOptional({
-        description: 'Sort order direction',
+        description: 'Dirección del ordenamiento',
         enum: SortOrder,
         example: SortOrder.DESC,
     })

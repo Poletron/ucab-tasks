@@ -1,40 +1,40 @@
 /**
- * Note Entity - Core Domain Object
+ * Entidad Nota - Objeto de Dominio Central
  * 
- * Represents a note in the UCAB Tasks application.
- * This is a pure TypeScript class with no framework dependencies.
+ * Representa una nota en la aplicación UCAB Tasks.
+ * Esta es una clase TypeScript pura sin dependencias del framework.
  * 
  * @author UCAB Tasks Team
  */
 export class Note {
     /**
-     * Unique identifier for the note
+     * Identificador único para la nota
      */
     readonly id: string;
 
     /**
-     * Title of the note
+     * Título de la nota
      */
     title: string;
 
     /**
-     * Content/body of the note
+     * Contenido/cuerpo de la nota
      */
     content: string;
 
     /**
-     * Timestamp when the note was created
+     * Marca de tiempo de cuando la nota fue creada
      */
     readonly createdAt: Date;
 
     /**
-     * Timestamp when the note was last modified
+     * Marca de tiempo de cuando la nota fue modificada por última vez
      */
     updatedAt: Date;
 
     /**
-     * Creates a new Note instance
-     * @param props - The properties to initialize the note with
+     * Crea una nueva instancia de Nota
+     * @param props - Las propiedades para inicializar la nota
      */
     constructor(props: {
         id: string;

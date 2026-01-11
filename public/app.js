@@ -1,16 +1,16 @@
 /**
- * UCAB Tasks - Frontend Application
- * Vanilla JavaScript SPA for note management
+ * UCAB Tasks - Aplicación Frontend
+ * SPA de JavaScript Vanilla para gestión de notas
  */
 
 // =============================================================================
-// API Configuration
+// Configuración de API
 // =============================================================================
 
 const API_BASE = '/api/notes';
 
 // =============================================================================
-// State Management
+// Gestión de Estado
 // =============================================================================
 
 const state = {
@@ -22,7 +22,7 @@ const state = {
 };
 
 // =============================================================================
-// DOM Elements
+// Elementos del DOM
 // =============================================================================
 
 const elements = {
@@ -48,14 +48,14 @@ const elements = {
 };
 
 // =============================================================================
-// API Functions
+// Funciones de API
 // =============================================================================
 
 /**
- * Fetches all notes from the API
- * @param {string} sortBy - Field to sort by
- * @param {string} order - Sort order (asc/desc)
- * @returns {Promise<Array>} Array of notes
+ * Recupera todas las notas de la API
+ * @param {string} sortBy - Campo por el cual ordenar
+ * @param {string} order - Orden (asc/desc)
+ * @returns {Promise<Array>} Arreglo de notas
  */
 async function fetchNotes(sortBy = 'updatedAt', order = 'desc') {
     try {
@@ -70,9 +70,9 @@ async function fetchNotes(sortBy = 'updatedAt', order = 'desc') {
 }
 
 /**
- * Fetches a single note by ID
- * @param {string} id - Note ID
- * @returns {Promise<Object|null>} Note object or null
+ * Recupera una sola nota por ID
+ * @param {string} id - ID de la nota
+ * @returns {Promise<Object|null>} Objeto de nota o null
  */
 async function fetchNoteById(id) {
     try {
@@ -87,9 +87,9 @@ async function fetchNoteById(id) {
 }
 
 /**
- * Creates a new note
- * @param {Object} data - Note data (title, content)
- * @returns {Promise<Object|null>} Created note or null
+ * Crea una nueva nota
+ * @param {Object} data - Datos de la nota (título, contenido)
+ * @returns {Promise<Object|null>} Nota creada o null
  */
 async function createNote(data) {
     try {
@@ -108,10 +108,10 @@ async function createNote(data) {
 }
 
 /**
- * Updates an existing note
- * @param {string} id - Note ID
- * @param {Object} data - Data to update
- * @returns {Promise<Object|null>} Updated note or null
+ * Actualiza una nota existente
+ * @param {string} id - ID de la nota
+ * @param {Object} data - Datos para actualizar
+ * @returns {Promise<Object|null>} Nota actualizada o null
  */
 async function updateNote(id, data) {
     try {
@@ -130,9 +130,9 @@ async function updateNote(id, data) {
 }
 
 /**
- * Deletes notes by IDs
- * @param {Array<string>} ids - Array of note IDs
- * @returns {Promise<Object|null>} Delete result or null
+ * Elimina notas por IDs
+ * @param {Array<string>} ids - Arreglo de IDs de notas
+ * @returns {Promise<Object|null>} Resultado de eliminación o null
  */
 async function deleteNotes(ids) {
     try {
@@ -151,13 +151,13 @@ async function deleteNotes(ids) {
 }
 
 // =============================================================================
-// UI Functions
+// Funciones de UI
 // =============================================================================
 
 /**
- * Formats a date for display
- * @param {string} dateString - ISO date string
- * @returns {string} Formatted date
+ * Formatea una fecha para mostrar
+ * @param {string} dateString - Cadena de fecha ISO
+ * @returns {string} Fecha formateada
  */
 function formatDate(dateString) {
     const date = new Date(dateString);
@@ -180,9 +180,9 @@ function formatDate(dateString) {
 }
 
 /**
- * Formats a full date for metadata display
- * @param {string} dateString - ISO date string
- * @returns {string} Formatted date
+ * Formatea una fecha completa para mostrar en metadatos
+ * @param {string} dateString - Cadena de fecha ISO
+ * @returns {string} Fecha formateada
  */
 function formatFullDate(dateString) {
     const date = new Date(dateString);
@@ -196,7 +196,7 @@ function formatFullDate(dateString) {
 }
 
 /**
- * Renders the notes list in the sidebar
+ * Renderiza la lista de notas en la barra lateral
  */
 function renderNotesList() {
     const { notes, currentNoteId } = state;
@@ -229,9 +229,9 @@ function renderNotesList() {
 }
 
 /**
- * Escapes HTML special characters
- * @param {string} text - Text to escape
- * @returns {string} Escaped text
+ * Escapa caracteres especiales HTML
+ * @param {string} text - Texto a escapar
+ * @returns {string} Texto escapado
  */
 function escapeHtml(text) {
     if (!text) return '';
@@ -241,8 +241,8 @@ function escapeHtml(text) {
 }
 
 /**
- * Shows the note editor with data
- * @param {Object} note - Note to display
+ * Muestra el editor de notas con datos
+ * @param {Object} note - Nota para mostrar
  */
 function showEditor(note) {
     state.currentNoteId = note.id;
@@ -262,7 +262,7 @@ function showEditor(note) {
 }
 
 /**
- * Hides the editor and shows empty state
+ * Oculta el editor y muestra el estado vacío
  */
 function hideEditor() {
     state.currentNoteId = null;
@@ -275,9 +275,9 @@ function hideEditor() {
 }
 
 /**
- * Shows a toast notification
- * @param {string} message - Message to display
- * @param {string} type - Toast type (success, error, info)
+ * Muestra una notificación toast
+ * @param {string} message - Mensaje a mostrar
+ * @param {string} type - Tipo de toast (success, error, info)
  */
 function showToast(message, type = 'info') {
     const toast = document.createElement('div');
@@ -293,23 +293,23 @@ function showToast(message, type = 'info') {
 }
 
 /**
- * Shows the delete confirmation modal
+ * Muestra el modal de confirmación de eliminación
  */
 function showDeleteModal() {
     elements.deleteModal.classList.remove('hidden');
 }
 
 /**
- * Hides the delete confirmation modal
+ * Oculta el modal de confirmación de eliminación
  */
 function hideDeleteModal() {
     elements.deleteModal.classList.add('hidden');
 }
 
 /**
- * Sets the editor status message
- * @param {string} message - Status message
- * @param {string} type - Status type (saving, saved, error)
+ * Establece el mensaje de estado del editor
+ * @param {string} message - Mensaje de estado
+ * @param {string} type - Tipo de estado (saving, saved, error)
  */
 function setEditorStatus(message, type = '') {
     elements.editorStatus.textContent = message;
@@ -317,24 +317,24 @@ function setEditorStatus(message, type = '') {
 }
 
 // =============================================================================
-// Event Handlers
+// Manejadores de Eventos
 // =============================================================================
 
 /**
- * Handles creating a new note
- * Shows empty editor - note is created on first save
+ * Maneja la creación de una nueva nota
+ * Muestra el editor vacío - la nota se crea al guardar por primera vez
  */
 async function handleNewNote() {
     if (state.hasUnsavedChanges && state.currentNoteId) {
         await handleSave();
     }
 
-    // Set state for new note (not yet saved)
+    // Establecer estado para nueva nota (aún no guardada)
     state.currentNoteId = null;
     state.isNewNote = true;
     state.hasUnsavedChanges = false;
 
-    // Clear and show editor
+    // Limpiar y mostrar editor
     elements.noteTitle.value = '';
     elements.noteContent.value = '';
     elements.metaCreated.textContent = '';
@@ -346,14 +346,14 @@ async function handleNewNote() {
     elements.emptyState.classList.add('hidden');
     elements.noteEditor.classList.remove('hidden');
 
-    // Focus on title
+    // Foco en el título
     elements.noteTitle.focus();
     renderNotesList();
 }
 
 /**
- * Handles selecting a note from the list
- * @param {string} noteId - ID of the note to select
+ * Maneja la selección de una nota de la lista
+ * @param {string} noteId - ID de la nota a seleccionar
  */
 async function handleSelectNote(noteId) {
     if (state.hasUnsavedChanges) {
@@ -369,24 +369,24 @@ async function handleSelectNote(noteId) {
 }
 
 /**
- * Handles saving the current note
+ * Maneja el guardado de la nota actual
  */
 async function handleSave() {
     const title = elements.noteTitle.value.trim() || 'Sin título';
     const content = elements.noteContent.value.trim();
 
-    // Don't save if both are empty for new notes
+    // No guardar si ambos están vacíos para nuevas notas
     if (state.isNewNote && !title && !content) {
         return;
     }
 
     setEditorStatus('Guardando...', 'saving');
 
-    // If it's a new note, create it first
+    // Si es una nueva nota, crearla primero
     if (state.isNewNote || !state.currentNoteId) {
         const created = await createNote({
             title: title,
-            content: content || ' ', // Ensure content is not empty
+            content: content || ' ', // Asegurar que el contenido no esté vacío
         });
 
         if (created) {
@@ -406,7 +406,7 @@ async function handleSave() {
         return;
     }
 
-    // Update existing note
+    // Actualizar nota existente
     const updated = await updateNote(state.currentNoteId, {
         title: title,
         content: content,
@@ -424,7 +424,7 @@ async function handleSave() {
 }
 
 /**
- * Handles deleting the current note
+ * Maneja la eliminación de la nota actual
  */
 async function handleDelete() {
     if (!state.currentNoteId) return;
@@ -440,7 +440,7 @@ async function handleDelete() {
 }
 
 /**
- * Handles sort change
+ * Maneja el cambio de ordenamiento
  */
 async function handleSortChange() {
     const [sortBy, order] = elements.sortSelect.value.split('-');
@@ -449,7 +449,7 @@ async function handleSortChange() {
 }
 
 /**
- * Loads notes from the API
+ * Carga notas de la API
  */
 async function loadNotes() {
     const [sortBy, order] = elements.sortSelect.value.split('-');

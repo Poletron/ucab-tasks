@@ -4,17 +4,17 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 /**
- * Bootstrap the NestJS application
+ * Inicializar la aplicación NestJS
  */
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Set global prefix for API routes
+  // Establecer prefijo global para rutas API
   app.setGlobalPrefix('api', {
-    exclude: ['/'], // Exclude root to serve static files
+    exclude: ['/'], // Excluir raíz para servir archivos estáticos
   });
 
-  // Enable global validation pipe with transformation
+  // Habilitar pipe de validación global con transformación
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -23,17 +23,17 @@ async function bootstrap() {
     }),
   );
 
-  // Enable CORS
+  // Habilitar CORS
   app.enableCors();
 
-  // Swagger configuration
+  // Configuración de Swagger
   const config = new DocumentBuilder()
     .setTitle('UCAB Tasks API')
     .setDescription(
       'API REST para gestión de notas. Desarrollada con NestJS siguiendo Clean Architecture.',
     )
     .setVersion('1.0.0')
-    .addTag('Notes', 'Endpoints para gestión de notas')
+    .addTag('Notas', 'Endpoints para gestión de notas')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

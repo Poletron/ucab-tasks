@@ -1,51 +1,51 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 /**
- * Response DTO for note list items (without content)
+ * DTO de respuesta para elementos de la lista de notas (sin contenido)
  */
 export class NoteListItemDto {
     @ApiProperty({
-        description: 'Unique identifier of the note',
+        description: 'Identificador único de la nota',
         example: '507f1f77bcf86cd799439011',
     })
     id: string;
 
     @ApiProperty({
-        description: 'Title of the note',
+        description: 'Título de la nota',
         example: 'Mi primera nota',
     })
     title: string;
 
     @ApiProperty({
-        description: 'Creation timestamp',
+        description: 'Marca de tiempo de creación',
         example: '2024-01-15T10:30:00.000Z',
     })
     createdAt: Date;
 
     @ApiProperty({
-        description: 'Last update timestamp',
+        description: 'Marca de tiempo de última actualización',
         example: '2024-01-15T12:45:00.000Z',
     })
     updatedAt: Date;
 }
 
 /**
- * Response DTO for full note details (including content)
+ * DTO de respuesta para detalles completos de la nota (incluyendo contenido)
  */
 export class NoteDetailDto extends NoteListItemDto {
     @ApiProperty({
-        description: 'Content/body of the note',
+        description: 'Contenido/cuerpo de la nota',
         example: 'Este es el contenido de mi nota...',
     })
     content: string;
 }
 
 /**
- * Response DTO for delete operation
+ * DTO de respuesta para la operación de eliminación
  */
 export class DeleteResultDto {
     @ApiProperty({
-        description: 'Number of notes deleted',
+        description: 'Número de notas eliminadas',
         example: 2,
     })
     deletedCount: number;

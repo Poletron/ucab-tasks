@@ -2,18 +2,18 @@ import { Note } from '../../core/entities/note.entity';
 import { NoteListItemDto, NoteDetailDto } from './dto';
 
 /**
- * Notes Mapper
+ * Mapper de Notas
  * 
- * Transforms domain entities to DTOs for the HTTP layer.
- * This separates the presentation logic from the controller,
- * keeping the controller "thin" and focused on HTTP concerns.
+ * Transforma entidades de dominio a DTOs para la capa HTTP.
+ * Esto separa la lógica de presentación del controlador,
+ * manteniendo el controlador "delgado" y enfocado en preocupaciones HTTP.
  */
 export class NotesMapper {
     /**
-     * Maps a Note entity to a list item DTO (without content)
-     * Used for GET /notes endpoint
-     * @param note - The domain entity
-     * @returns The list item DTO
+     * Mapea una entidad Nota a un DTO de elemento de lista (sin contenido)
+     * Usado para el endpoint GET /notes
+     * @param note - La entidad de dominio
+     * @returns El DTO de elemento de lista
      */
     static toListItem(note: Note): NoteListItemDto {
         return {
@@ -25,19 +25,19 @@ export class NotesMapper {
     }
 
     /**
-     * Maps multiple Note entities to list item DTOs
-     * @param notes - Array of domain entities
-     * @returns Array of list item DTOs
+     * Mapea múltiples entidades Nota a DTOs de elementos de lista
+     * @param notes - Arreglo de entidades de dominio
+     * @returns Arreglo de DTOs de elementos de lista
      */
     static toListItems(notes: Note[]): NoteListItemDto[] {
         return notes.map((note) => this.toListItem(note));
     }
 
     /**
-     * Maps a Note entity to a detail DTO (with content)
-     * Used for GET /notes/:id, POST /notes, PATCH /notes/:id
-     * @param note - The domain entity
-     * @returns The detail DTO
+     * Mapea una entidad Nota a un DTO de detalle (con contenido)
+     * Usado para endpoints GET /notes/:id, POST /notes, PATCH /notes/:id
+     * @param note - La entidad de dominio
+     * @returns El DTO de detalle
      */
     static toDetail(note: Note): NoteDetailDto {
         return {

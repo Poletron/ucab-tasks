@@ -2,15 +2,15 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 
 /**
- * DTO for updating an existing note
+ * DTO para actualizar una nota existente
  */
 export class UpdateNoteDto {
     /**
-     * Updated title of the note
+     * Título actualizado de la nota
      * @example "Título actualizado"
      */
     @ApiPropertyOptional({
-        description: 'Updated title of the note',
+        description: 'Título actualizado de la nota',
         example: 'Título actualizado',
     })
     @IsString()
@@ -18,11 +18,11 @@ export class UpdateNoteDto {
     title?: string;
 
     /**
-     * Updated content/body of the note
+     * Contenido/cuerpo actualizado de la nota
      * @example "Contenido actualizado de la nota..."
      */
     @ApiPropertyOptional({
-        description: 'Updated content/body of the note',
+        description: 'Contenido/cuerpo actualizado de la nota',
         example: 'Contenido actualizado de la nota...',
     })
     @IsString()

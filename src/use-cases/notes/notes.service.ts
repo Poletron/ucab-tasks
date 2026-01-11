@@ -7,10 +7,10 @@ import {
 import { CreateNoteDto, UpdateNoteDto } from './dto';
 
 /**
- * Notes Service - Business Logic Layer
+ * Servicio de Notas - Capa de Lógica de Negocio
  * 
- * Handles all business logic for note operations.
- * This service is database-agnostic and depends only on the INotesRepository abstraction.
+ * Maneja toda la lógica de negocio para operaciones con notas.
+ * Este servicio es agnóstico a la base de datos y depende solo de la abstracción INotesRepository.
  * 
  * @example
  * ```typescript
@@ -25,19 +25,19 @@ export class NotesService {
     ) { }
 
     /**
-     * Retrieves all notes with optional filtering
-     * @param filters - Optional filter and sort options
-     * @returns Promise resolving to array of Note entities
+     * Recupera todas las notas con filtrado opcional
+     * @param filters - Opciones opcionales de filtro y ordenamiento
+     * @returns Promesa que resuelve a un arreglo de entidades de Nota
      */
     async findAll(filters?: NotesFilterOptions): Promise<Note[]> {
         return this.notesRepository.findAll(filters);
     }
 
     /**
-     * Retrieves a single note by ID
-     * @param id - The unique identifier of the note
-     * @returns Promise resolving to the Note entity
-     * @throws NotFoundException if note is not found
+     * Recupera una sola nota por ID
+     * @param id - El identificador único de la nota
+     * @returns Promesa que resuelve a la entidad de Nota
+     * @throws NotFoundException si la nota no es encontrada
      */
     async findById(id: string): Promise<Note> {
         const note = await this.notesRepository.findById(id);
@@ -48,9 +48,9 @@ export class NotesService {
     }
 
     /**
-     * Creates a new note
-     * @param createNoteDto - The data for creating the note
-     * @returns Promise resolving to the created Note entity
+     * Crea una nueva nota
+     * @param createNoteDto - Los datos para crear la nota
+     * @returns Promesa que resuelve a la entidad de Nota creada
      */
     async create(createNoteDto: CreateNoteDto): Promise<Note> {
         return this.notesRepository.create({
@@ -60,11 +60,11 @@ export class NotesService {
     }
 
     /**
-     * Updates an existing note
-     * @param id - The unique identifier of the note to update
-     * @param updateNoteDto - The data to update
-     * @returns Promise resolving to the updated Note entity
-     * @throws NotFoundException if note is not found
+     * Actualiza una nota existente
+     * @param id - El identificador único de la nota a actualizar
+     * @param updateNoteDto - Los datos para actualizar
+     * @returns Promesa que resuelve a la entidad de Nota actualizada
+     * @throws NotFoundException si la nota no es encontrada
      */
     async update(id: string, updateNoteDto: UpdateNoteDto): Promise<Note> {
         const note = await this.notesRepository.update(id, {
@@ -78,9 +78,9 @@ export class NotesService {
     }
 
     /**
-     * Deletes one or more notes
-     * @param ids - Array of note IDs to delete
-     * @returns Promise resolving to the number of deleted notes
+     * Elimina una o más notas
+     * @param ids - Arreglo de IDs de notas a eliminar
+     * @returns Promesa que resuelve al número de notas eliminadas
      */
     async delete(ids: string[]): Promise<number> {
         return this.notesRepository.delete(ids);

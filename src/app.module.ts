@@ -6,27 +6,27 @@ import { join } from 'path';
 import { NotesModule } from './use-cases/notes/notes.module';
 
 /**
- * Root Application Module
+ * Módulo Raíz de la Aplicación
  * 
- * Configures the application with:
- * - Environment variables via ConfigModule
- * - MongoDB connection via MongooseModule
- * - Static file serving via ServeStaticModule
- * - Feature modules (NotesModule)
+ * Configura la aplicación con:
+ * - Variables de entorno vía ConfigModule
+ * - Conexión MongoDB vía MongooseModule
+ * - Servicio de archivos estáticos vía ServeStaticModule
+ * - Módulos de características (NotesModule)
  */
 @Module({
   imports: [
-    // Load environment variables
+    // Cargar variables de entorno
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
     }),
-    // Serve static files from public folder
+    // Servir archivos estáticos desde la carpeta public
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
       exclude: ['/api/(.*)'],
     }),
-    // MongoDB connection
+    // Conexión MongoDB
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -34,7 +34,7 @@ import { NotesModule } from './use-cases/notes/notes.module';
         uri: configService.get<string>('MONGO_URI', 'mongodb://localhost:27017/ucab-tasks'),
       }),
     }),
-    // Feature modules
+    // Módulos de características
     NotesModule,
   ],
   controllers: [],

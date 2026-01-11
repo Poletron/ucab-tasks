@@ -1,22 +1,22 @@
 import { Note } from '../entities/note.entity';
 
 /**
- * Filter options for querying notes
+ * Opciones de filtrado para consultar notas
  */
 export interface NotesFilterOptions {
     /**
-     * Field to sort results by
+     * Campo por el cual ordenar los resultados
      */
     sortBy?: 'title' | 'createdAt' | 'updatedAt';
 
     /**
-     * Sort order direction
+     * Dirección del ordenamiento
      */
     order?: 'asc' | 'desc';
 }
 
 /**
- * Data required to create a new note
+ * Datos requeridos para crear una nueva nota
  */
 export interface CreateNoteData {
     title: string;
@@ -24,7 +24,7 @@ export interface CreateNoteData {
 }
 
 /**
- * Data for updating an existing note
+ * Datos para actualizar una nota existente
  */
 export interface UpdateNoteData {
     title?: string;
@@ -54,38 +54,38 @@ export interface UpdateNoteData {
  */
 export abstract class INotesRepository {
     /**
-     * Retrieves all notes with optional filtering and sorting
-     * @param filters - Optional filter and sort options
-     * @returns Promise resolving to array of Note entities
+     * Recupera todas las notas con filtrado y ordenamiento opcional
+     * @param filters - Opciones opcionales de filtro y ordenamiento
+     * @returns Promesa que resuelve a un arreglo de entidades de Nota
      */
     abstract findAll(filters?: NotesFilterOptions): Promise<Note[]>;
 
     /**
-     * Retrieves a single note by its unique identifier
-     * @param id - The unique identifier of the note
-     * @returns Promise resolving to Note entity or null if not found
+     * Recupera una sola nota por su identificador único
+     * @param id - El identificador único de la nota
+     * @returns Promesa que resuelve a la entidad de Nota o null si no se encuentra
      */
     abstract findById(id: string): Promise<Note | null>;
 
     /**
-     * Creates a new note in the repository
-     * @param data - The data for creating the note (title and content)
-     * @returns Promise resolving to the created Note entity with generated id and timestamps
+     * Crea una nueva nota en el repositorio
+     * @param data - Los datos para crear la nota (título y contenido)
+     * @returns Promesa que resuelve a la entidad de Nota creada con id y marcas de tiempo generados
      */
     abstract create(data: CreateNoteData): Promise<Note>;
 
     /**
-     * Updates an existing note
-     * @param id - The unique identifier of the note to update
-     * @param data - The data to update (title and/or content)
-     * @returns Promise resolving to updated Note entity or null if not found
+     * Actualiza una nota existente
+     * @param id - El identificador único de la nota a actualizar
+     * @param data - Los datos para actualizar (título y/o contenido)
+     * @returns Promesa que resuelve a la entidad de Nota actualizada o null si no se encuentra
      */
     abstract update(id: string, data: UpdateNoteData): Promise<Note | null>;
 
     /**
-     * Deletes one or more notes by their identifiers
-     * @param ids - Array of note identifiers to delete
-     * @returns Promise resolving to the number of deleted notes
+     * Elimina una o más notas por sus identificadores
+     * @param ids - Arreglo de identificadores de notas a eliminar
+     * @returns Promesa que resuelve al número de notas eliminadas
      */
     abstract delete(ids: string[]): Promise<number>;
 }

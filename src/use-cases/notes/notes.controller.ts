@@ -29,30 +29,30 @@ import {
 } from './dto';
 
 /**
- * Notes Controller - HTTP Layer
+ * Controlador de Notas - Capa HTTP
  * 
- * Handles HTTP requests for note operations.
- * This controller is "thin" - it only parses requests, validates DTOs,
- * calls the service, and uses the mapper to transform responses.
+ * Maneja peticiones HTTP para operaciones con notas.
+ * Este controlador es "delgado" - solo parsea peticiones, valida DTOs,
+ * llama al servicio y usa el mapper para transformar respuestas.
  */
-@ApiTags('Notes')
+@ApiTags('Notas')
 @Controller('notes')
 export class NotesController {
     constructor(private readonly notesService: NotesService) { }
 
     /**
-     * Get all notes with optional filters
-     * Returns note list without content field
+     * Obtener todas las notas con filtros opcionales
+     * Retorna lista de notas sin el campo de contenido
      */
     @Get()
     @ApiOperation({
-        summary: 'Get all notes',
+        summary: 'Obtener todas las notas',
         description:
-            'Retrieves a list of all notes with optional sorting. Returns notes without content.',
+            'Recupera una lista de todas las notas con ordenamiento opcional. Retorna notas sin contenido.',
     })
     @ApiResponse({
         status: 200,
-        description: 'List of notes retrieved successfully',
+        description: 'Lista de notas recuperada exitosamente',
         type: [NoteListItemDto],
     })
     async findAll(@Query() filters: NotesFilterDto): Promise<NoteListItemDto[]> {
@@ -64,28 +64,28 @@ export class NotesController {
     }
 
     /**
-     * Get a single note by ID
-     * Returns full note details including content
+     * Obtener una sola nota por ID
+     * Retorna detalles completos incluyendo contenido
      */
     @Get(':id')
     @ApiOperation({
-        summary: 'Get note by ID',
+        summary: 'Obtener nota por ID',
         description:
-            'Retrieves a single note by its unique identifier. Returns full details including content.',
+            'Recupera una sola nota por su identificador único. Retorna detalles completos incluyendo contenido.',
     })
     @ApiParam({
         name: 'id',
-        description: 'Unique identifier of the note',
+        description: 'Identificador único de la nota',
         example: '507f1f77bcf86cd799439011',
     })
     @ApiResponse({
         status: 200,
-        description: 'Note retrieved successfully',
+        description: 'Nota recuperada exitosamente',
         type: NoteDetailDto,
     })
     @ApiResponse({
         status: 404,
-        description: 'Note not found',
+        description: 'Nota no encontrada',
     })
     async findById(@Param('id') id: string): Promise<NoteDetailDto> {
         const note = await this.notesService.findById(id);
@@ -93,21 +93,21 @@ export class NotesController {
     }
 
     /**
-     * Create a new note
+     * Crear una nueva nota
      */
     @Post()
     @ApiOperation({
-        summary: 'Create a new note',
-        description: 'Creates a new note with the provided title and content.',
+        summary: 'Crear una nueva nota',
+        description: 'Crea una nueva nota con el título y contenido proporcionados.',
     })
     @ApiResponse({
         status: 201,
-        description: 'Note created successfully',
+        description: 'Nota creada exitosamente',
         type: NoteDetailDto,
     })
     @ApiResponse({
         status: 400,
-        description: 'Invalid input data',
+        description: 'Datos de entrada inválidos',
     })
     async create(@Body() createNoteDto: CreateNoteDto): Promise<NoteDetailDto> {
         const note = await this.notesService.create(createNoteDto);
@@ -115,27 +115,27 @@ export class NotesController {
     }
 
     /**
-     * Update an existing note
+     * Actualizar una nota existente
      */
     @Patch(':id')
     @ApiOperation({
-        summary: 'Update a note',
+        summary: 'Actualizar una nota',
         description:
-            'Updates an existing note. Only title and content can be modified.',
+            'Actualiza una nota existente. Solo el título y el contenido pueden ser modificados.',
     })
     @ApiParam({
         name: 'id',
-        description: 'Unique identifier of the note to update',
+        description: 'Identificador único de la nota a actualizar',
         example: '507f1f77bcf86cd799439011',
     })
     @ApiResponse({
         status: 200,
-        description: 'Note updated successfully',
+        description: 'Nota actualizada exitosamente',
         type: NoteDetailDto,
     })
     @ApiResponse({
         status: 404,
-        description: 'Note not found',
+        description: 'Nota no encontrada',
     })
     async update(
         @Param('id') id: string,
@@ -146,17 +146,17 @@ export class NotesController {
     }
 
     /**
-     * Delete one or more notes
+     * Eliminar una o más notas
      */
     @Delete()
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
-        summary: 'Delete notes',
-        description: 'Deletes one or more notes by their IDs.',
+        summary: 'Eliminar notas',
+        description: 'Elimina una o más notas por sus IDs.',
     })
     @ApiResponse({
         status: 200,
-        description: 'Notes deleted successfully',
+        description: 'Notas eliminadas exitosamente',
         type: DeleteResultDto,
     })
     async delete(

@@ -2,15 +2,15 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 /**
- * DTO for creating a new note
+ * DTO para crear una nueva nota
  */
 export class CreateNoteDto {
     /**
-     * Title of the note
+     * Título de la nota
      * @example "Mi primera nota"
      */
     @ApiProperty({
-        description: 'Title of the note',
+        description: 'Título de la nota',
         example: 'Mi primera nota',
     })
     @IsString()
@@ -18,11 +18,11 @@ export class CreateNoteDto {
     title: string;
 
     /**
-     * Content/body of the note
+     * Contenido/cuerpo de la nota
      * @example "Este es el contenido de mi nota..."
      */
     @ApiProperty({
-        description: 'Content/body of the note',
+        description: 'Contenido/cuerpo de la nota',
         example: 'Este es el contenido de mi nota...',
     })
     @IsString()
