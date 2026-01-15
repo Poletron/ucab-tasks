@@ -1,6 +1,6 @@
 # ==============================================================================
-# UCAB Tasks - Dockerfile
-# Optimized for development with hot-reload
+# UCAB Tasks - Dockerfile (Optimized)
+# Development image with hot-reload support
 # ==============================================================================
 
 FROM node:20-alpine
@@ -8,16 +8,14 @@ FROM node:20-alpine
 # Set working directory
 WORKDIR /app
 
-# Install dependencies for node-gyp (if needed)
-RUN apk add --no-cache python3 make g++
-
-# Copy package files
+# Copy package files first (better layer caching)
 COPY package*.json ./
 
-# Install all dependencies (including devDependencies for development)
-RUN npm ci
+# Install dependencies
+# Note: No native build tools needed - all deps are pure JS or have prebuilt binaries
+RUN npm ci --prefer-offline
 
-# Copy source code
+# Copy source code (this layer changes most frequently, so it goes last)
 COPY . .
 
 # Expose the application port
