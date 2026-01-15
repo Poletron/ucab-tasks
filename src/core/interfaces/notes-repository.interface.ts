@@ -32,23 +32,23 @@ export interface UpdateNoteData {
 }
 
 /**
- * Notes Repository Abstract Class
+ * Clase Abstracta del Repositorio de Notas
  * 
- * Defines the contract for note persistence operations.
- * Using abstract class instead of interface to support dependency injection
- * with emitDecoratorMetadata in TypeScript strict mode.
+ * Define el contrato para las operaciones de persistencia de notas.
+ * Se usa una clase abstracta en lugar de una interfaz para soportar inyección de dependencias
+ * con emitDecoratorMetadata en modo estricto de TypeScript.
  * 
- * Implementations can use MongoDB, PostgreSQL, file system, or any other storage.
- * The business logic layer depends only on this abstraction, not on concrete implementations.
+ * Las implementaciones pueden usar MongoDB, PostgreSQL, sistema de archivos o cualquier otro almacenamiento.
+ * La capa de lógica de negocio depende solo de esta abstracción, no de implementaciones concretas.
  * 
  * @example
  * ```typescript
- * // In the module
+ * // En el módulo
  * providers: [
  *   { provide: INotesRepository, useClass: MongoNotesRepository }
  * ]
  * 
- * // In the service
+ * // En el servicio
  * constructor(private readonly notesRepository: INotesRepository)
  * ```
  */

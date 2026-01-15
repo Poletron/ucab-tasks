@@ -5,16 +5,16 @@ import { INotesRepository } from '../../core/interfaces/notes-repository.interfa
 import { Note } from '../../core/entities/note.entity';
 
 /**
- * Unit tests for NotesService
+ * Pruebas unitarias para NotesService
  * 
- * These tests verify the business logic layer in isolation
- * by mocking the repository dependency.
+ * Estas pruebas verifican la capa de lógica de negocio en aislamiento
+ * simulando la dependencia del repositorio.
  */
 describe('NotesService', () => {
     let service: NotesService;
     let mockRepository: jest.Mocked<INotesRepository>;
 
-    // Sample test data
+    // Datos de prueba de muestra
     const mockNote = new Note({
         id: '507f1f77bcf86cd799439011',
         title: 'Test Note',
@@ -35,7 +35,7 @@ describe('NotesService', () => {
     ];
 
     beforeEach(async () => {
-        // Create mock repository
+        // Crear repositorio simulado
         mockRepository = {
             findAll: jest.fn(),
             findById: jest.fn(),
@@ -62,7 +62,7 @@ describe('NotesService', () => {
     });
 
     describe('findAll', () => {
-        it('should return all notes', async () => {
+        it('debería retornar todas las notas', async () => {
             mockRepository.findAll.mockResolvedValue(mockNotes);
 
             const result = await service.findAll();
@@ -71,7 +71,7 @@ describe('NotesService', () => {
             expect(mockRepository.findAll).toHaveBeenCalledWith(undefined);
         });
 
-        it('should apply filters when provided', async () => {
+        it('debería aplicar filtros cuando se proporcionan', async () => {
             const filters = { sortBy: 'title' as const, order: 'asc' as const };
             mockRepository.findAll.mockResolvedValue(mockNotes);
 
@@ -80,7 +80,7 @@ describe('NotesService', () => {
             expect(mockRepository.findAll).toHaveBeenCalledWith(filters);
         });
 
-        it('should return empty array when no notes exist', async () => {
+        it('debería retornar un arreglo vacío cuando no existen notas', async () => {
             mockRepository.findAll.mockResolvedValue([]);
 
             const result = await service.findAll();
@@ -90,7 +90,7 @@ describe('NotesService', () => {
     });
 
     describe('findById', () => {
-        it('should return a note when found', async () => {
+        it('debería retornar una nota cuando se encuentra', async () => {
             mockRepository.findById.mockResolvedValue(mockNote);
 
             const result = await service.findById(mockNote.id);
@@ -99,7 +99,7 @@ describe('NotesService', () => {
             expect(mockRepository.findById).toHaveBeenCalledWith(mockNote.id);
         });
 
-        it('should throw NotFoundException when note not found', async () => {
+        it('debería lanzar NotFoundException cuando la nota no se encuentra', async () => {
             mockRepository.findById.mockResolvedValue(null);
 
             await expect(service.findById('nonexistent-id')).rejects.toThrow(
@@ -107,7 +107,7 @@ describe('NotesService', () => {
             );
         });
 
-        it('should include correct error message when not found', async () => {
+        it('debería incluir el mensaje de error correcto cuando no se encuentra', async () => {
             mockRepository.findById.mockResolvedValue(null);
             const id = 'nonexistent-id';
 
@@ -118,7 +118,7 @@ describe('NotesService', () => {
     });
 
     describe('create', () => {
-        it('should create a new note', async () => {
+        it('debería crear una nueva nota', async () => {
             const createDto = { title: 'New Note', content: 'New content' };
             mockRepository.create.mockResolvedValue(mockNote);
 
@@ -133,7 +133,7 @@ describe('NotesService', () => {
     });
 
     describe('update', () => {
-        it('should update an existing note', async () => {
+        it('debería actualizar una nota existente', async () => {
             const updateDto = { title: 'Updated Title' };
             const updatedNote = new Note({
                 ...mockNote,
@@ -151,7 +151,7 @@ describe('NotesService', () => {
             });
         });
 
-        it('should throw NotFoundException when note not found', async () => {
+        it('debería lanzar NotFoundException cuando la nota no se encuentra', async () => {
             mockRepository.update.mockResolvedValue(null);
 
             await expect(
@@ -159,7 +159,7 @@ describe('NotesService', () => {
             ).rejects.toThrow(NotFoundException);
         });
 
-        it('should allow partial updates', async () => {
+        it('debería permitir actualizaciones parciales', async () => {
             const updateDto = { content: 'Updated content only' };
             mockRepository.update.mockResolvedValue(mockNote);
 
@@ -173,7 +173,7 @@ describe('NotesService', () => {
     });
 
     describe('delete', () => {
-        it('should delete notes by ids', async () => {
+        it('debería eliminar notas por ids', async () => {
             const ids = ['id1', 'id2'];
             mockRepository.delete.mockResolvedValue(2);
 
@@ -183,7 +183,7 @@ describe('NotesService', () => {
             expect(mockRepository.delete).toHaveBeenCalledWith(ids);
         });
 
-        it('should return 0 when no notes were deleted', async () => {
+        it('debería retornar 0 cuando no se eliminaron notas', async () => {
             mockRepository.delete.mockResolvedValue(0);
 
             const result = await service.delete(['nonexistent-id']);

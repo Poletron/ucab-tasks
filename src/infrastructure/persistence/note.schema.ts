@@ -2,15 +2,15 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
 /**
- * Mongoose document type for Note
+ * Tipo de documento Mongoose para Nota
  */
 export type NoteDocument = HydratedDocument<NoteSchema>;
 
 /**
- * Note Schema - Mongoose Schema Definition
+ * Esquema de Nota - Definición de Esquema Mongoose
  * 
- * Defines the MongoDB document structure for notes.
- * This is an infrastructure concern and should not be imported in the core layer.
+ * Define la estructura del documento MongoDB para las notas.
+ * Esta es una preocupación de infraestructura y no debe importarse en la capa central.
  * 
  * @collection notes
  */
@@ -20,24 +20,24 @@ export type NoteDocument = HydratedDocument<NoteSchema>;
 })
 export class NoteSchema {
     /**
-     * Title of the note
+     * Título de la nota
      */
     @Prop({ required: true, type: String })
     title: string;
 
     /**
-     * Content/body of the note
+     * Contenido/cuerpo de la nota
      */
     @Prop({ required: true, type: String })
     content: string;
 
     /**
-     * Auto-generated creation timestamp
+     * Marca de tiempo de creación generada automáticamente
      */
     createdAt: Date;
 
     /**
-     * Auto-generated update timestamp
+     * Marca de tiempo de actualización generada automáticamente
      */
     updatedAt: Date;
 }

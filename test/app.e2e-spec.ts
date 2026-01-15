@@ -7,18 +7,18 @@ import { NotesModule } from '../src/use-cases/notes/notes.module';
 import { ConfigModule } from '@nestjs/config';
 
 /**
- * End-to-End tests for Notes API
+ * Pruebas End-to-End para la API de Notas
  * 
- * These tests verify the complete HTTP request/response cycle
- * using an in-memory MongoDB instance.
+ * Estas pruebas verifican el ciclo completo de petición/respuesta HTTP
+ * usando una instancia de MongoDB en memoria.
  */
-describe('NotesController (e2e)', () => {
+describe('Controlador de Notas (e2e)', () => {
   let app: INestApplication;
   let mongoServer: MongoMemoryServer;
   let createdNoteId: string;
 
   beforeAll(async () => {
-    // Start in-memory MongoDB
+    // Iniciar MongoDB en memoria
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
 
@@ -34,7 +34,7 @@ describe('NotesController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
 
-    // Apply same pipes as in main.ts
+    // Aplicar los mismos pipes que en main.ts
     app.useGlobalPipes(
       new ValidationPipe({
         whitelist: true,
@@ -52,7 +52,7 @@ describe('NotesController (e2e)', () => {
   });
 
   describe('POST /notes', () => {
-    it('should create a new note', async () => {
+    it('debería crear una nueva nota', async () => {
       const createDto = {
         title: 'E2E Test Note',
         content: 'This is a test note created during e2e testing',
@@ -69,11 +69,11 @@ describe('NotesController (e2e)', () => {
       expect(response.body).toHaveProperty('createdAt');
       expect(response.body).toHaveProperty('updatedAt');
 
-      // Save ID for later tests
+      // Guardar ID para pruebas posteriores
       createdNoteId = response.body.id;
     });
 
-    it('should return 400 when title is missing', async () => {
+    it('debería retornar 400 cuando falta el título', async () => {
       const invalidDto = {
         content: 'Content without title',
       };
@@ -84,7 +84,7 @@ describe('NotesController (e2e)', () => {
         .expect(400);
     });
 
-    it('should return 400 when content is missing', async () => {
+    it('debería retornar 400 cuando falta el contenido', async () => {
       const invalidDto = {
         title: 'Title without content',
       };
@@ -95,7 +95,7 @@ describe('NotesController (e2e)', () => {
         .expect(400);
     });
 
-    it('should return 400 when body is empty', async () => {
+    it('debería retornar 400 cuando el cuerpo está vacío', async () => {
       await request(app.getHttpServer())
         .post('/notes')
         .send({})
@@ -104,7 +104,7 @@ describe('NotesController (e2e)', () => {
   });
 
   describe('GET /notes', () => {
-    it('should return all notes without content', async () => {
+    it('debería retornar todas las notas sin contenido', async () => {
       const response = await request(app.getHttpServer())
         .get('/notes')
         .expect(200);
@@ -112,7 +112,7 @@ describe('NotesController (e2e)', () => {
       expect(Array.isArray(response.body)).toBe(true);
       expect(response.body.length).toBeGreaterThan(0);
 
-      // Verify note structure (no content field in list)
+      // Verificar estructura de nota (sin campo de contenido en lista)
       const note = response.body[0];
       expect(note).toHaveProperty('id');
       expect(note).toHaveProperty('title');
@@ -121,8 +121,8 @@ describe('NotesController (e2e)', () => {
       expect(note).not.toHaveProperty('content');
     });
 
-    it('should support sorting by title ascending', async () => {
-      // Create another note for sorting test
+    it('debería soportar ordenamiento por título ascendente', async () => {
+      // Crear otra nota para prueba de ordenamiento
       await request(app.getHttpServer())
         .post('/notes')
         .send({ title: 'AAA First Note', content: 'Content' });
@@ -134,7 +134,7 @@ describe('NotesController (e2e)', () => {
       expect(response.body[0].title).toBe('AAA First Note');
     });
 
-    it('should support sorting by createdAt descending', async () => {
+    it('debería soportar ordenamiento por fecha de creación descendente', async () => {
       const response = await request(app.getHttpServer())
         .get('/notes?sortBy=createdAt&order=desc')
         .expect(200);
@@ -144,19 +144,19 @@ describe('NotesController (e2e)', () => {
   });
 
   describe('GET /notes/:id', () => {
-    it('should return a note with content by ID', async () => {
+    it('debería retornar una nota con contenido por ID', async () => {
       const response = await request(app.getHttpServer())
         .get(`/notes/${createdNoteId}`)
         .expect(200);
 
       expect(response.body.id).toBe(createdNoteId);
-      expect(response.body).toHaveProperty('content'); // Content included in detail view
+      expect(response.body).toHaveProperty('content'); // Contenido incluido en vista detallada
       expect(response.body).toHaveProperty('title');
       expect(response.body).toHaveProperty('createdAt');
       expect(response.body).toHaveProperty('updatedAt');
     });
 
-    it('should return 404 for non-existent note', async () => {
+    it('debería retornar 404 para nota inexistente', async () => {
       await request(app.getHttpServer())
         .get('/notes/507f1f77bcf86cd799439999')
         .expect(404);
@@ -164,7 +164,7 @@ describe('NotesController (e2e)', () => {
   });
 
   describe('PATCH /notes/:id', () => {
-    it('should update note title', async () => {
+    it('debería actualizar el título de la nota', async () => {
       const updateDto = { title: 'Updated E2E Title' };
 
       const response = await request(app.getHttpServer())
@@ -175,7 +175,7 @@ describe('NotesController (e2e)', () => {
       expect(response.body.title).toBe('Updated E2E Title');
     });
 
-    it('should update note content', async () => {
+    it('debería actualizar el contenido de la nota', async () => {
       const updateDto = { content: 'Updated content via e2e test' };
 
       const response = await request(app.getHttpServer())
@@ -186,7 +186,7 @@ describe('NotesController (e2e)', () => {
       expect(response.body.content).toBe('Updated content via e2e test');
     });
 
-    it('should update both title and content', async () => {
+    it('debería actualizar tanto título como contenido', async () => {
       const updateDto = {
         title: 'Both Updated',
         content: 'Both fields updated',
@@ -201,29 +201,29 @@ describe('NotesController (e2e)', () => {
       expect(response.body.content).toBe('Both fields updated');
     });
 
-    it('should return 404 for non-existent note', async () => {
+    it('debería retornar 404 para nota inexistente', async () => {
       await request(app.getHttpServer())
         .patch('/notes/507f1f77bcf86cd799439999')
         .send({ title: 'Test' })
         .expect(404);
     });
 
-    it('should update updatedAt timestamp', async () => {
-      // Get current note
+    it('debería actualizar la marca de tiempo de actualización', async () => {
+      // Obtener nota actual
       const before = await request(app.getHttpServer())
         .get(`/notes/${createdNoteId}`)
         .expect(200);
 
-      // Wait a bit to ensure different timestamp
+      // Esperar un poco para asegurar diferente marca de tiempo
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      // Update note
+      // Actualizar nota
       await request(app.getHttpServer())
         .patch(`/notes/${createdNoteId}`)
         .send({ title: 'Timestamp Test' })
         .expect(200);
 
-      // Get updated note
+      // Obtener nota actualizada
       const after = await request(app.getHttpServer())
         .get(`/notes/${createdNoteId}`)
         .expect(200);
@@ -235,8 +235,8 @@ describe('NotesController (e2e)', () => {
   });
 
   describe('DELETE /notes', () => {
-    it('should delete notes by IDs', async () => {
-      // Create a note to delete
+    it('debería eliminar notas por IDs', async () => {
+      // Crear una nota para eliminar
       const createResponse = await request(app.getHttpServer())
         .post('/notes')
         .send({ title: 'To Delete', content: 'Will be deleted' });
@@ -250,14 +250,14 @@ describe('NotesController (e2e)', () => {
 
       expect(response.body.deletedCount).toBe(1);
 
-      // Verify deletion
+      // Verificar eliminación
       await request(app.getHttpServer())
         .get(`/notes/${noteToDeleteId}`)
         .expect(404);
     });
 
-    it('should delete multiple notes at once', async () => {
-      // Create multiple notes
+    it('debería eliminar múltiples notas a la vez', async () => {
+      // Crear múltiples notas
       const note1 = await request(app.getHttpServer())
         .post('/notes')
         .send({ title: 'Delete 1', content: 'Content 1' });
@@ -274,14 +274,14 @@ describe('NotesController (e2e)', () => {
       expect(response.body.deletedCount).toBe(2);
     });
 
-    it('should return 400 when ids array is empty', async () => {
+    it('debería retornar 400 cuando el arreglo de ids está vacío', async () => {
       await request(app.getHttpServer())
         .delete('/notes')
         .send({ ids: [] })
         .expect(400);
     });
 
-    it('should return 0 deletedCount for non-existent IDs', async () => {
+    it('debería retornar deletedCount en 0 para IDs inexistentes', async () => {
       const response = await request(app.getHttpServer())
         .delete('/notes')
         .send({ ids: ['507f1f77bcf86cd799439999'] })

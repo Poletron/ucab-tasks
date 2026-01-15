@@ -11,11 +11,11 @@ import {
 import { NoteSchema, NoteDocument } from '../persistence/note.schema';
 
 /**
- * MongoDB implementation of the Notes Repository
+ * Implementación MongoDB del Repositorio de Notas
  * 
- * This class extends the INotesRepository abstract class using Mongoose.
- * It handles all MongoDB-specific operations and maps between
- * Mongoose documents and domain entities.
+ * Esta clase extiende la clase abstracta INotesRepository usando Mongoose.
+ * Maneja todas las operaciones específicas de MongoDB y mapea entre
+ * documentos de Mongoose y entidades de dominio.
  * 
  * @extends {INotesRepository}
  */
@@ -29,9 +29,9 @@ export class MongoNotesRepository extends INotesRepository {
     }
 
     /**
-     * Maps a Mongoose document to a domain Note entity
-     * @param doc - The Mongoose document to map
-     * @returns The mapped Note entity
+     * Mapea un documento de Mongoose a una entidad de dominio Nota
+     * @param doc - El documento de Mongoose a mapear
+     * @returns La entidad Nota mapeada
      */
     private mapToEntity(doc: NoteDocument): Note {
         return new Note({
@@ -44,9 +44,9 @@ export class MongoNotesRepository extends INotesRepository {
     }
 
     /**
-     * Retrieves all notes with optional filtering and sorting
-     * @param filters - Optional filter and sort options
-     * @returns Promise resolving to array of Note entities
+     * Recupera todas las notas con filtrado y ordenamiento opcional
+     * @param filters - Opciones opcionales de filtro y ordenamiento
+     * @returns Promesa que resuelve a un arreglo de entidades de Nota
      */
     async findAll(filters?: NotesFilterOptions): Promise<Note[]> {
         const sortField = filters?.sortBy ?? 'createdAt';
@@ -61,9 +61,9 @@ export class MongoNotesRepository extends INotesRepository {
     }
 
     /**
-     * Retrieves a single note by its unique identifier
-     * @param id - The unique identifier of the note
-     * @returns Promise resolving to Note entity or null if not found
+     * Recupera una sola nota por su identificador único
+     * @param id - El identificador único de la nota
+     * @returns Promesa que resuelve a la entidad de Nota o null si no se encuentra
      */
     async findById(id: string): Promise<Note | null> {
         const doc = await this.noteModel.findById(id).exec();
@@ -71,9 +71,9 @@ export class MongoNotesRepository extends INotesRepository {
     }
 
     /**
-     * Creates a new note in the repository
-     * @param data - The data for creating the note
-     * @returns Promise resolving to the created Note entity
+     * Crea una nueva nota en el repositorio
+     * @param data - Los datos para crear la nota
+     * @returns Promesa que resuelve a la entidad de Nota creada
      */
     async create(data: CreateNoteData): Promise<Note> {
         const doc = await this.noteModel.create({
@@ -84,10 +84,10 @@ export class MongoNotesRepository extends INotesRepository {
     }
 
     /**
-     * Updates an existing note
-     * @param id - The unique identifier of the note to update
-     * @param data - The data to update
-     * @returns Promise resolving to updated Note entity or null if not found
+     * Actualiza una nota existente
+     * @param id - El identificador único de la nota a actualizar
+     * @param data - Los datos a actualizar
+     * @returns Promesa que resuelve a la entidad de Nota actualizada o null si no se encuentra
      */
     async update(id: string, data: UpdateNoteData): Promise<Note | null> {
         const doc = await this.noteModel
@@ -97,9 +97,9 @@ export class MongoNotesRepository extends INotesRepository {
     }
 
     /**
-     * Deletes one or more notes by their identifiers
-     * @param ids - Array of note identifiers to delete
-     * @returns Promise resolving to the number of deleted notes
+     * Elimina una o más notas por sus identificadores
+     * @param ids - Arreglo de identificadores de notas a eliminar
+     * @returns Promesa que resuelve al número de notas eliminadas
      */
     async delete(ids: string[]): Promise<number> {
         const result = await this.noteModel.deleteMany({ _id: { $in: ids } }).exec();
